@@ -117,7 +117,7 @@ param(
         add-LogEntry -logEntry $result -logfile $logFile
         ($result.data.value) |out-gridview -Title 'LogonDuration'
 
-#administrators
+#system logs
         $myurl = "https://api-us.cloud.com/systemlog/records"
         $result=Invoke-CloudRequest -myURL $myURL -headers $headers 
         #add the log entry to the log file
