@@ -36,16 +36,13 @@
 
 
 #Read the parameters passed from command line
-Param(
-#    [Parameter(Mandatory=$true)]
-    [string]$client_id='0e3b9a89-8fe3-43e2-acdf-49d27c556627',
-    
-	[string]$client_secret='O96pDtu4SfxqbTgi7rdrIw==',
-    
-	[string]$customer_id='dcint4b1816a',
-    [int]$hours=1 #default is last hour
+[int]$hours=1 #default is last hour
 
-)
+
+$client_id=''
+$client_secret=''
+$customer_id=''
+
 
 	$ErrorActionPreference = "Stop"
 	$ScriptName = "REST_Notifications"

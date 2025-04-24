@@ -34,8 +34,8 @@
 
 
 param(
-    [Parameter(Mandatory = $false)] [string]$secretPath, # csv file in this format: customerId,citrixAPIKey,secretKey. If this is not present, user will have to logon explicitely
-    [Parameter(Mandatory = $false)] [string]$region
+    [Parameter(Mandatory = $true)] [string]$secretPath, # csv file in this format: customerId,citrixAPIKey,secretKey. If this is not present, user will have to logon explicitely
+    [Parameter(Mandatory = $false)] [string]$region='eu' # eu, us or ap are supported, default is eu
 )
 
 #-----------------------------
@@ -76,30 +76,28 @@ param(
         $clientSecret = $secret.secretKEY
 
 #Get the Bearer Token
-        $result = Get-BearerToken -client_id $clientId -client_secret $clientSecret -region $region
+        $token = Get-BearerToken -client_id $clientId -client_secret $clientSecret -region $region
         #add the log entry to the log file
-        add-LogEntry -logEntry $result -logfile $logFile
+        add-LogEntry -logEntry $token -logfile $logFile
 # Create the header  
-        $header = @{
-                Authorization = "CwsAuth Bearer=$($result.data)"
-                'Citrix-CustomerId' = $customerId
-                'Accept'="application/json";
-
+        $headers = @{
+                Authorization = "CwsAuth Bearer=$($token.data)";
+                'Citrix-CustomerId' = $customerId;
+                'Accept'="application/json"
         }
 
-#get resource location maintenancxe schedule
+#get resource location maintenance schedule
         $myURL = 'https://api.cloud.com/maintenance/'
-
-        $result=Invoke-CloudRequest -myURL $myURL -header $header
+        $result=Invoke-CloudRequest -myURL $myURL -headers $headers
         #add the log entry to the log file
         add-LogEntry -logEntry $result -logfile $logFile
-
+        $result.data |out-gridview -Title 'Resource Location maintenance window'
 #Get resource locations data
         $myURL = 'https://api.cloud.com/resourcelocations'
-        $result=Invoke-CloudRequest -myURL $myURL -header $header
+        $result=Invoke-CloudRequest -myURL $myURL -headers $headers
         #add the log entry to the log file
         add-LogEntry -logEntry $result -logfile $logFile
-
+        $result.data.items |select Name, timezone |out-gridview -Title 'Resource location timezone'
 #Monitoring
         switch ($region)
                 {
@@ -108,12 +106,20 @@ param(
                 'ap' {$myurl = "https://api-ap-s.cloud.com/monitorodata/sessions"}
                 }
         # requesting connection failures, define parameters and URL
-        $parameters = @{
-                
-                '$apply' = 'filter((CreatedDate gt 2021-01-01) and ((User/FullName) ne null))/groupby((User/FullName),aggregate (LogonDuration with average as AvgLogonDuration, CreatedDate with countdistinct as AmountOfSessions))'
-                '$orderby'='AmountOfSessions desc'
-                '$count' = 'true'
-        }
-        $result=Invoke-CloudRequest -myURL $myURL -header $header -parameters $parameters
+        $Parameters = @{             
+                '$apply' = "filter((CreatedDate gt 2021-01-01) and ((User/FullName) ne null))/groupby((User/FullName),aggregate (LogonDuration with average as AvgLogonDuration, CreatedDate with countdistinct as AmountOfSessions))";
+                '$orderby' = "AmountOfSessions desc";
+                '$count' = "true"
+              }
+      
+        $result=Invoke-CloudRequest -myURL $myURL -headers $headers -parameters $parameters
         #add the log entry to the log file
         add-LogEntry -logEntry $result -logfile $logFile
+        ($result.data.value) |out-gridview -Title 'LogonDuration'
+
+#administrators
+        $myurl = "https://api-us.cloud.com/systemlog/records"
+        $result=Invoke-CloudRequest -myURL $myURL -headers $headers 
+        #add the log entry to the log file
+        add-LogEntry -logEntry $result -logfile $logFile
+        ($result.data.items) |out-gridview -Title 'records'

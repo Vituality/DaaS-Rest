@@ -48,22 +48,46 @@ try
 	}
 }
 
-
 function Invoke-CloudRequest{
     Param(
     [Parameter(Mandatory = $true)] [String]$myURL,
-    [Parameter(Mandatory = $true)] $header,
-    [Parameter(Mandatory = $false)] [String]$parameters
+    [Parameter(Mandatory = $true)] $headers,
+    [Parameter(Mandatory = $false)] $parameters
     )
+    $allresults =@()
     try{
         write-host "Retrieving Data ."
+
         if (-NOT $PSBoundParameters.ContainsKey('parameters')){
-            $results = ((Invoke-WebRequest $myURL -Headers $header)  | ConvertFrom-Json )
+            $result = (Invoke-WebRequest $myURL -Headers $headers)
+            $allresults = ($result | ConvertFrom-Json)
+            $continuation_token=((($result.RawContent -split '"continuationToken":"')[1]) -split '"}')[0] # extract the Continuation Token from result
+            while ($continuation_token -ne ''){ #if the continuation Token is not null, it means that we have more results to get
+                $result = (Invoke-WebRequest ($myurl+'?continuationToken='+$continuation_token)  -Headers $headers) #get the next results
+                $continuation_token=((($result.RawContent -split '"continuationToken":"')[1]) -split '"}')[0] 
+                $newresult = ($result | ConvertFrom-Json)
+                $allresults = @($allresults)+@($newresult)
+            }
         }
         else{
-            $results = ((Invoke-WebRequest $myURL -Headers $header -Body $parameters)  | ConvertFrom-Json )
-        }
-        return @{Level='Success';Message=" $($MyInvocation.MyCommand.Name):Success : data found";Data=$results}
+            $result = (Invoke-WebRequest $myURL -Headers $headers -Body $parameters)
+            $continuation_token=((($result.RawContent -split '"continuationToken":"')[1]) -split '"}')[0] # extract the Continuation Token from result
+            $odataNextLink=((($result.RawContent -split '"@odata.nextLink":"')[1]) -split '"}')[0]
+            $allresults = ($result | ConvertFrom-Json)
+            while ($continuation_token -ne ''){ #if the continuation Token is not null, it means that we have more results to get
+                $result = (Invoke-WebRequest ($myurl+'?continuationToken='+$continuation_token)  -Headers $headers -Body $parameters) #get the next results
+                $continuation_token=((($result.RawContent -split '"continuationToken":"')[1]) -split '"}')[0] 
+                $newresult = ($result | ConvertFrom-Json)
+                $allresults = @($allresults)+@($newresult)
+            }
+            while ($odataNextLink -ne ''){
+                $result = (Invoke-WebRequest $odataNextLink -Headers $headers) #get the next results
+                $odataNextLink=((($result.RawContent -split '"@odata.nextLink":"')[1]) -split '"}')[0]
+                $newresult = ($result | ConvertFrom-Json)
+                $allresults = @($allresults)+@($newresult)
+            }
+      }
+        return @{Level='Success';Message=" $($MyInvocation.MyCommand.Name):Success : data found";Data=$allresults}
     }
     catch{
         return @{Level='Error';Message=" $($MyInvocation.MyCommand.Name):Error : unable to retrieve Data";Data=''}
