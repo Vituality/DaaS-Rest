@@ -122,4 +122,18 @@ param(
         $result=Invoke-CloudRequest -myURL $myURL -headers $headers 
         #add the log entry to the log file
         add-LogEntry -logEntry $result -logfile $logFile
-        ($result.data.items) |out-gridview -Title 'records'
+        ($result.data.items) |out-gridview -Title 'system logs'
+
+#notifications
+        $myurl = "https://notifications.citrixworkspacesapi.net/"+ $customerId+"/notifications"
+        $result=Invoke-CloudRequest -myURL $myURL -headers $headers 
+        #add the log entry to the log file
+        add-LogEntry -logEntry $result -logfile $logFile
+        ( $result.data.items |select title,description) |out-gridview -Title 'Notifications'
+
+#Cloud Connectors last contact date
+        $myurl = "https://api.cloud.com/connectors"
+        $result=Invoke-CloudRequest -myURL $myURL -headers $headers 
+        #add the log entry to the log file
+        add-LogEntry -logEntry $result -logfile $logFile
+        ($result.data |select fqdn,lastcontactdate) |out-gridview -Title 'Cloudconnectors'
