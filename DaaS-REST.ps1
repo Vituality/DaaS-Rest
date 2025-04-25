@@ -34,7 +34,7 @@
 
 
 param(
-    [Parameter(Mandatory = $true)] [string]$secretPath, # csv file in this format: customerId,citrixAPIKey,secretKey. If this is not present, user will have to logon explicitely
+    [Parameter(Mandatory = $false)] [string]$secretPath, # csv file in this format: customerId,citrixAPIKey,secretKey. If this is not present, user will have to logon explicitely
     [Parameter(Mandatory = $false)] [string]$region='eu' # eu, us or ap are supported, default is eu
 )
 
@@ -125,7 +125,7 @@ param(
         ($result.data.items) |out-gridview -Title 'system logs'
 
 #notifications
-        $myurl = "https://notifications.citrixworkspacesapi.net/"+ $customerId+"/notifications"
+        $myurl = "https://api.cloud.com/notifications"
         $result=Invoke-CloudRequest -myURL $myURL -headers $headers 
         #add the log entry to the log file
         add-LogEntry -logEntry $result -logfile $logFile
