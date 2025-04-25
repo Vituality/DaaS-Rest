@@ -18,7 +18,7 @@ if ($systemlogs) {Clear-Variable -Name systemlogs}
                 }
         $token = ($response.Content | ConvertFrom-Json).access_token
         
-# Create the header  
+# Create the headers  
         $headers = @{
                 Authorization = "CwsAuth Bearer=$($token)";
                 'Citrix-CustomerId' = $customerId;
