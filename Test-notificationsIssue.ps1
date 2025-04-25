@@ -2,12 +2,15 @@ if ($notifications) {Clear-Variable -Name notifications}
 if ($systemlogs) {Clear-Variable -Name systemlogs}
 
 #Initializing customerID
-        $customerId = 'dcint4b1816a'    
+
+        #$secretPath = 'C:\SecureClients\SE_France_principalFull.csv'
+        $secretPath = 'C:\SecureClients\SE_France_secclient.csv'
+
 #importing secureAPI : 
-        $secret = Import-Csv 'C:\SecureClients\secret\serviceprincipal-Full.csv' -Delimiter ','
-        #$secret = Import-Csv 'C:\SecureClients\secret\SecureAPI-Full.csv' -Delimiter ','
-        $clientId = $secret.ID
-        $clientSecret = $secret.Secret
+        $secret = Import-Csv $secretPath -Delimiter ','
+        $customerId = $secret.customerId    
+        $clientId = $secret.citrixAPIKey
+        $clientSecret = $secret.secretKEY
 
 #Get the Bearer Token
         $tokenUrl = "https://api-us.cloud.com/cctrustoauth2/root/tokens/clients"
