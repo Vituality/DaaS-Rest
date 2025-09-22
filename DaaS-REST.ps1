@@ -52,7 +52,7 @@ param(
                        
                 # Import Modules
                         try{
-                                Import-Module $Scriptpath\Modules\1_cloud_API-General.psm1 -Force
+                                Import-Module $Scriptpath\Modules\1_cloud_API-General-v2.psm1 -Force
                                 Import-Module $Scriptpath\Modules\General.psm1 -Force
                         }
                         catch{
@@ -112,7 +112,7 @@ param(
                 '$count' = "true"
               }
       
-        $result=Invoke-CloudRequest -myURL $myURL -headers $headers -parameters $parameters
+        $result=Invoke-odata -myURL $myURL -headers $headers -parameters $parameters
         #add the log entry to the log file
         add-LogEntry -logEntry $result -logfile $logFile
         ($result.data.value) |out-gridview -Title 'LogonDuration'

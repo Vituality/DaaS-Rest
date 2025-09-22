@@ -97,9 +97,9 @@ add-type @"
         $startDate = (Get-Date).AddDays(-30).ToString("yyyy-MM-ddTHH:mm:ssZ") #last 30 days
         $myurl = "https://api-us.cloud.com/systemlog/records?StartDateTime="+$startDate
         $response = Invoke-RestMethod -Uri $myUrL -Method GET -Headers $headers 
-        $continuationtoken = $response.continuationToken
+        [string]$continuationtoken = $response.continuationToken
         $result=$response.items
-        while ($null -ne $ContinuationToken){
+        while (![string]::IsNullOrWhiteSpace($continuationtoken)){
                     $requestUriContinue = $myUrL + "&ContinuationToken=" + $ContinuationToken
                     $responsePage = Invoke-RestMethod -Uri $requestUriContinue -Method GET -Headers $headers
                     $result += $responsePage.Items

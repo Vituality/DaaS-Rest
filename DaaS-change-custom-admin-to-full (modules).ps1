@@ -45,7 +45,7 @@ param(
                        
                 # Import Modules
                         try{
-                                Import-Module $Scriptpath\Modules\1_cloud_API-General.psm1 -Force
+                                Import-Module $Scriptpath\Modules\1_cloud_API-General-v2.psm1 -Force
                                 Import-Module $Scriptpath\Modules\General.psm1 -Force
                         }
                         catch{
