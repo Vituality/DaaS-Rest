@@ -1,27 +1,22 @@
 <#  
 ##########################################################################################################################################
-.TITLE          :   Cloud-REST
+.TITLE          :   DaaS list machines
 
-.FUNCTION       :   Querry Citrix Cloud through REST
+.FUNCTION       :   Querry Citrix DaaS and return machines through REST
 
 .PARAMETERS     :    
              		mandatory: 
-                        client_id         : ID for Citrix cloud API access - see "Get started with Citrix cloud API" https://developer.cloud.com/explore-more-apis-and-sdk/cloud-services-platform/citrix-cloud-api-overview/docs/get-started-with-citrix-cloud-apis
-                        client_secret     : Client Secret for Citrix cloud API access - see "Get started with Citrix cloud API" https://developer.cloud.com/explore-more-apis-and-sdk/cloud-services-platform/citrix-cloud-api-overview/docs/get-started-with-citrix-cloud-apis
-                        customer_id       : Customer ID for Citrix cloud API access - see "Get started with Citrix cloud API" https://developer.cloud.com/explore-more-apis-and-sdk/cloud-services-platform/citrix-cloud-api-overview/docs/get-started-with-citrix-cloud-apis
+                        secretPath  :  csv file in this format: customerId,citrixAPIKey,secretKey. If this is not present, user will have to logon explicitely
+                not mandatory
+                        region      : eu, us or ap are supported, default is eu
 
 
 .REQUIEREMENTS  :     
                     Access to Citrix Cloud over the Internet
                     #Read the parameters passed from command line
-                    # secret.csv file syntax
-                    # customerId,citrixAPIKey,secretKey
-                    #########,######-#####-####-####-############,######################
-
+                    
 .EXAMPLE        :
                     
-   
-   
 
 .AUTHOR        :     Vincent Rombau - Solution Architect - Citrix 
 
@@ -39,8 +34,6 @@
 )
  #>
 
- $secretpath="C:\SecureClients\SE_France_secclient.csv"
- $secretpath="C:\SecureClients\Stellantissecureclient.csv"
 $region='eu'
 #-----------------------------
 #   Script prerequisites
