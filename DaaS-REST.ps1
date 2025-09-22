@@ -76,7 +76,7 @@ param(
         $clientSecret = $secret.secretKEY
 
 #Get the Bearer Token
-        $token = Get-BearerToken -client_id $clientId -client_secret $clientSecret -region $region
+        $token = Get-BearerToken -clientid $clientId -clientsecret $clientSecret -region $region
         #add the log entry to the log file
         add-LogEntry -logEntry $token -logfile $logFile
 # Create the header  
