@@ -1,31 +1,24 @@
 <#  
 ##########################################################################################################################################
-.TITLE          :   Cloud-REST
+.TITLE          :   DaaS-adminupdate-Full.ps1 
 
-.FUNCTION       :   Querry Citrix Cloud through REST
+.FUNCTION       :   update Custom admin user to full admin user in Citrix Cloud through REST API
 
 .PARAMETERS     :    
              		mandatory: 
-                        client_id         : ID for Citrix cloud API access - see "Get started with Citrix cloud API" https://developer.cloud.com/explore-more-apis-and-sdk/cloud-services-platform/citrix-cloud-api-overview/docs/get-started-with-citrix-cloud-apis
-                        client_secret     : Client Secret for Citrix cloud API access - see "Get started with Citrix cloud API" https://developer.cloud.com/explore-more-apis-and-sdk/cloud-services-platform/citrix-cloud-api-overview/docs/get-started-with-citrix-cloud-apis
-                        customer_id       : Customer ID for Citrix cloud API access - see "Get started with Citrix cloud API" https://developer.cloud.com/explore-more-apis-and-sdk/cloud-services-platform/citrix-cloud-api-overview/docs/get-started-with-citrix-cloud-apis
+                        adminemail        : email address of the administrator to update 
+                        secretPath        : secret API using SPN to logon to cloud. csv file in this format: customerId,citrixAPIKey,secretKey
+                        region            : Citrix Cloud region to contact: eu, us or ap are supported, default is set to eu
 
-
-.REQUIEREMENTS  :     
-                    Access to Citrix Cloud over the Internet
-                    #Read the parameters passed from command line
-                    # secret.csv file syntax
-                    # customerId,citrixAPIKey,secretKey
-                    #########,######-#####-####-####-############,######################
 
 .EXAMPLE        :
-                    
+                        .\DaaS-adminupdate-Full.ps1 -adminemail 'vincent.rombau@citrix.com' -secretPath 'C:\SecureClients\Servicee_principalFull.csv' -region 'eu'
    
    
 
 .AUTHOR        :     Vincent Rombau - Solution Architect - Citrix 
 
-.VERSION       : 	 0.
+.VERSION       : 	 1.0
 
 .HISTORY       :    
 
@@ -36,7 +29,7 @@
 param(
     [Parameter(Mandatory = $false)] [string]$secretPath, # csv file in this format: customerId,citrixAPIKey,secretKey. If this is not present, user will have to logon explicitely
     [Parameter(Mandatory = $false)] [string]$adminemail, # email address of the administrator to update 
-    [Parameter(Mandatory = $false)] [string]$region='eu' # eu, us or ap are supported, default is eu
+    [Parameter(Mandatory = $false)] [string]$region='eu' # eu, us or ap are supported, default is set to eu
 )
 
 
