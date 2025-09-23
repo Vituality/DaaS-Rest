@@ -27,8 +27,8 @@
 
 
 param(
-    [Parameter(Mandatory = $false)] [string]$secretPath, # csv file in this format: customerId,citrixAPIKey,secretKey. If this is not present, user will have to logon explicitely
-    [Parameter(Mandatory = $false)] [string]$adminemail, # email address of the administrator to update 
+    [Parameter(Mandatory = $true)] [string]$secretPath, # csv file in this format: customerId,citrixAPIKey,secretKey. If this is not present, user will have to logon explicitely
+    [Parameter(Mandatory = $true)] [string]$adminemail, # email address of the administrator to update 
     [Parameter(Mandatory = $false)] [string]$region='eu' # eu, us or ap are supported, default is set to eu
 )
 
