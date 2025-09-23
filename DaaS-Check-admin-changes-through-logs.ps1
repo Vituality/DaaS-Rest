@@ -27,7 +27,7 @@
 
 
 param(
-    [Parameter(Mandatory = $false)] [string]$secretPath, # csv file in this format: customerId,citrixAPIKey,secretKey. 
+    [Parameter(Mandatory = $true)] [string]$secretPath, # csv file in this format: customerId,citrixAPIKey,secretKey. 
     [Parameter(Mandatory = $false)] [string]$region='eu' # eu, us or ap are supported, default is eu
 )
 
