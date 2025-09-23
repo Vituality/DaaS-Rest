@@ -13,7 +13,7 @@
 
 
 .EXAMPLE        :
-                        .\DaaS-change-custom-admin-to-full.ps1 -adminemail 'vincent.rombau@citrix.com' -secretPath 'C:\SecureClients\Servicee_principalFull.csv' -region 'eu'
+                        .\DaaS-change-custom-admin-to-full.ps1 -adminemail 'vincent.rombau@citrix.com' -secretPath 'C:\SecureClients\Service_principalFull.csv' -region 'eu'
    
    
 
