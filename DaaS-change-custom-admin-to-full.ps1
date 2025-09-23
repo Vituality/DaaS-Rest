@@ -7,7 +7,7 @@
 .PARAMETERS     :    
              		mandatory: 
                         adminemail        : email address of the administrator to update 
-                        secretPath        : secret API using SPN to logon to cloud. csv file in this format: customerId,citrixAPIKey,secretKey
+                        secretPath        : secret API using Service principal to logon to cloud. csv file in this format: customerId,citrixAPIKey,secretKey
                non-mandatory
                         region            : Citrix Cloud region to contact: eu, us or ap are supported, default is set to eu
 
