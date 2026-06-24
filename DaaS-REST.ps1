@@ -137,3 +137,59 @@ param(
         #add the log entry to the log file
         add-LogEntry -logEntry $result -logfile $logFile
         ($result.data |select fqdn,lastcontactdate) |out-gridview -Title 'Cloudconnectors'
+
+#Amount of users in DaaS
+                      switch ($region)
+                {
+                'us' {$myurl = "https://api-us.cloud.com/monitorodata/sessions"}
+                'eu' {$myurl = "https://api-eu.cloud.com/monitorodata/sessions"}
+                'ap' {$myurl = "https://api-ap-s.cloud.com/monitorodata/sessions"}
+                }
+        $Parameters = @{             
+                '$apply' = "filter((CreatedDate gt 2024-01-16) and (Currentconnection/ClientVersion ne null) and (Currentconnection/ClientVersion ne ''))/groupby((user/Upn))";
+                '$count' = "true"
+              }
+      
+        $result=Invoke-odata -myURL $myURL -headers $headers -parameters $parameters
+        #add the log entry to the log file
+        add-LogEntry -logEntry $result -logfile $logFile
+        ($result.data.value) |out-gridview -Title 'Amount of users'
+        Write-host "Total amount of users: $($result.data.value.count)" -ForegroundColor Green
+
+#Connection Failure logs
+                      switch ($region)
+                {
+                'us' {$myurl = "https://api-us.cloud.com/monitorodata/ConnectionFailureLogs"}
+                'eu' {$myurl = "https://api-eu.cloud.com/monitorodata/ConnectionFailureLogs"}
+                'ap' {$myurl = "https://api-ap-s.cloud.com/monitorodata/ConnectionFailureLogs"}
+                }
+
+        $Parameters = @{             
+                '$filter' = "CreatedDate gt 2026-06-23"
+                '$expand' = "session,machine"
+              }
+
+        $result=Invoke-odata -myURL $myURL -headers $headers -parameters $parameters
+        #add the log entry to the log file
+        add-LogEntry -logEntry $result -logfile $logFile$param
+        ($result.data.value) |out-gridview -Title 'Amount of users'
+        Write-host "Total amount of users: $($result.data.value.count)" -ForegroundColor Green
+
+#Amount of machines in DaaS
+                      switch ($region)
+                {
+                'us' {$myurl = "https://api-us.cloud.com/monitorodata/sessions"}
+                'eu' {$myurl = "https://api-eu.cloud.com/monitorodata/sessions"}
+                'ap' {$myurl = "https://api-ap-s.cloud.com/monitorodata/sessions"}
+                }
+        $Parameters = @{             
+                '$apply' = "filter((CreatedDate gt 2024-01-16) and (Currentconnection/ClientVersion ne null) and (Currentconnection/ClientVersion ne ''))/groupby((CurrentConnection/ClientName))";
+                '$count' = "true"
+              }
+
+
+        $result=Invoke-odata -myURL $myURL -headers $headers -parameters $parameters
+        #add the log entry to the log file
+        add-LogEntry -logEntry $result -logfile $logFile
+        ($result.data.value) |out-gridview -Title 'Amount oif machines'
+        Write-host "Total amount of machines: $($result.data.value.count)" -ForegroundColor Green
